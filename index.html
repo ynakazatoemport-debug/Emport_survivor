@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emport Survivor</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="ui-layer">
+        <div id="top-bar" class="hidden">
+            <div class="top-info">
+                <div id="wave-display">Wave: 1 / 20</div>
+                <div id="time-display">Time: 15</div>
+                <div id="hp-bar-container">
+                    <div id="hp-bar-fill"></div>
+                    <div id="hp-text">HP: 100 / 100</div>
+                </div>
+                <div id="debuff-status-row">
+                    <div id="poison-status-icon" class="status-icon-box hidden" title="毒">
+                        <img src="キャラ/デバフ/毒＿アイコン.png" alt="POISON" class="status-badge-img">
+                    </div>
+                    <div id="atk-down-status-icon" class="status-icon-box hidden" title="攻撃力低下">
+                        <img src="キャラ/デバフ/ATK＿DOWN＿アイコン.png" alt="ATK DOWN" class="status-badge-img">
+                    </div>
+                    <div id="stun-status-icon" class="status-icon-box hidden" title="スタン">
+                        <img src="キャラ/デバフ/スタン＿アイコン.png" alt="STUN" class="status-badge-img">
+                    </div>
+                </div>
+            </div>
+            <div class="top-info" style="text-align: right;">
+                <div id="score-display">Score: 0</div>
+                <div id="level-display">Lv: 1</div>
+            </div>
+        </div>
+        <div id="exp-bar-container" class="hidden">
+            <div id="exp-bar-fill"></div>
+        </div>
+        <div id="game-over" class="hidden">
+            <h1>GAME OVER</h1>
+            <p class="modal-score-text">Score: <span id="final-score">0</span></p>
+            <div id="ranking-container">
+                <h3 id="ranking-title">Top 5 High Scores</h3>
+                <ol id="ranking-list">
+                    <!-- ランキングがここに表示されます -->
+                </ol>
+                <button id="reset-ranking-btn">ハイスコアリセット</button>
+            </div>
+            <div class="modal-btn-group">
+                <button id="restart-btn">Restart</button>
+                <button id="gameover-title-btn">タイトルに戻る</button>
+            </div>
+        </div>
+        <div id="game-clear" class="hidden">
+            <h1>GAME CLEAR!</h1>
+            <p class="modal-score-text">Final Score: <span id="clear-score">0</span></p>
+            <div id="clear-ranking-container">
+                <h3 id="clear-ranking-title">Top 5 High Scores</h3>
+                <ol id="clear-ranking-list">
+                    <!-- ランキングがここに表示されます -->
+                </ol>
+                <button id="clear-reset-ranking-btn">ハイスコアリセット</button>
+            </div>
+            <div class="modal-btn-group">
+                <button id="clear-restart-btn">Restart</button>
+                <button id="clear-title-btn">タイトルに戻る</button>
+            </div>
+        </div>
+        <div id="level-up-screen" class="hidden">
+            <h2>LEVEL UP!</h2>
+            <p>強化するスキルを選択してください</p>
+            <div id="skill-options">
+                <!-- スキルカードがJSで生成されます -->
+            </div>
+        </div>
+        <div id="pause-screen" class="hidden">
+            <h1>PAUSED</h1>
+            <p class="pause-hint-text">Press ESC to resume</p>
+            <div class="modal-btn-group">
+                <button id="resume-btn">ゲームを続ける</button>
+                <button id="title-btn">タイトルに戻る</button>
+            </div>
+        </div>
+        <div id="start-screen">
+            <div id="stage-select-container">
+                <p style="color: #fff; font-size: 20px; margin: 0 0 20px 0; grid-column: span 2; font-weight: bold; text-shadow: 2px 2px 0px #000; text-align: center;">プレイするステージを選択してください</p>
+                <button class="stage-btn" data-stage="PC部門">PC部門</button>
+                <button class="stage-btn" data-stage="キッチン部門">キッチン部門</button>
+                <button class="stage-btn" data-stage="清掃部門">清掃部門</button>
+                <button class="stage-btn" data-stage="農業部門">農業部門</button>
+            </div>
+            
+            <div id="character-select-container" class="hidden">
+                <p style="color: #fff; font-size: 20px; margin: 0 0 30px 0; font-weight: bold; text-shadow: 2px 2px 0px #000; text-align: center;">キャラクターを選択してください</p>
+                <div style="display: flex; gap: 40px; justify-content: center;">
+                    <div class="char-option" data-char="男性">
+                        <img src="キャラ/自機/立ち絵/男性＿前.png" alt="男性">
+                        <button class="char-select-btn">男性</button>
+                    </div>
+                    <div class="char-option" data-char="女性">
+                        <img src="キャラ/自機/立ち絵/女性＿前.png" alt="女性">
+                        <button class="char-select-btn">女性</button>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button id="back-to-stage-btn">ステージ選択に戻る</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- モバイル専用 ポーズボタン -->
+        <button id="mobile-menu-btn" class="mobile-only hidden">PAUSE</button>
+
+        <!-- モバイル専用 バーチャルスティック -->
+        <div id="mobile-controls" class="mobile-only hidden">
+            <div id="joystick-move-container" class="joystick-container">
+                <div id="joystick-move-base" class="joystick-base">
+                    <div id="joystick-move-stick" class="joystick-stick"></div>
+                </div>
+                <span class="joystick-label">MOVE</span>
+            </div>
+            <div id="joystick-attack-container" class="joystick-container">
+                <div id="joystick-attack-base" class="joystick-base">
+                    <div id="joystick-attack-stick" class="joystick-stick"></div>
+                </div>
+                <span class="joystick-label">ATTACK</span>
+            </div>
+        </div>
+
+        <!-- 端末横向き警告画面（モバイル専用） -->
+        <div id="orientation-warning" class="mobile-only hidden">
+            <div class="orientation-warning-box">
+                <div class="phone-rotate-icon">📱</div>
+                <p>端末を縦向きにしてください</p>
+            </div>
+        </div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <script src="main.js"></script>
+</body>
+</html>
